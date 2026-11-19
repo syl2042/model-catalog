@@ -1,36 +1,81 @@
 # Aurora Model Catalog
 
-**Une seule URL pour les applications :**
+**An up-to-date model reference for developers and coding agents building AI agents.**
 
+[Français](README.fr.md) · [Download the catalog](https://models-catalog.auroramind.fr/model-catalog.json) · [Detailed installation guide (French)](INSTALLATION.md)
+
+## The problem
+
+Building an AI agent involves more than choosing a model by name. Models and versions can differ in how they use tools, whether and how they reason, which effort settings they accept, their context limits, and their prices. The same model can also behave differently across a provider's APIs.
+
+A coding agent integrating a model needs these details to select the right API and build a compatible workflow. That information is spread across provider documentation and changes over time. Maintaining a separate list in every application makes it easy to miss a new model or rely on outdated assumptions.
+
+Aurora Model Catalog brings available model information together in **one public JSON file**, refreshed nightly. A developer or coding agent can consult it when designing an integration; an application can use it to discover and filter models without maintaining its own hard-coded catalog.
+
+**Catalog URL:** https://models-catalog.auroramind.fr/model-catalog.json
+
+## What is in the catalog?
+
+The catalog draws on public Models.dev and LiteLLM data, supplemented by selected official provider documentation. It includes references for providers such as OpenAI, Anthropic, Google, Mistral, xAI, DeepSeek and Cohere. Availability changes; a listing does **not** guarantee that a model is active or accessible to a particular account.
+
+For each offer, the file records information **when known**:
+
+- Model and provider identifiers, aliases and lifecycle information.
+- Context and output limits; image and PDF inputs.
+- Reasoning, supported effort levels, tool calling and structured output.
+- Input caching and standard or conditional pricing, in USD per million tokens.
+- A source and observation date for recorded properties.
+
+References explicitly tied to the same canonical model are grouped together. Each group's `offers` keeps the original identifiers, capabilities, prices and provenance separate. References that cannot be matched reliably remain separate, so some duplicates may remain. Platform prices are excluded; direct-provider pricing is included only where the collector recognizes it reliably.
+
+**Use it as a reference, not as a guarantee.** `null` means unknown, not unsupported or free. Coverage is incomplete; a field can be missing, stale, or specific to a different API or service condition. Consult provenance and the provider's official documentation when a decision depends on an uncertain value. The catalog does not make generation requests or check a user's account access.
+
+## Prompt for your coding agent
+
+Copy this prompt into your coding agent when building or updating an application that uses AI models:
+
+```text
+Use the Aurora Model Catalog as a reference for this integration:
 https://models-catalog.auroramind.fr/model-catalog.json
 
-Ce fichier JSON public est mis à jour quotidiennement. Son [schéma JSON](https://models-catalog.auroramind.fr/model-catalog.schema.json) est disponible séparément pour les développeurs, mais n'est pas nécessaire pour le télécharger. Voir aussi le [guide complet d'installation et d'utilisation](INSTALLATION.md) et le [rapport public](RAPPORT-PUBLIC.md).
+First inspect the existing project, its instructions, and the provider APIs it
+actually uses. Download the JSON over HTTPS or use the project's existing
+validated copy. Check generated_at, sync_status, and schema_version (expected: clean-1.0); if the
+catalog is unavailable, stale, partial, or invalid, say so and use a valid
+previous copy if available. Query only the relevant entries; do not dump the
+entire catalog into the conversation.
 
-## Quel problème résout ce catalogue ?
+The file's models contain grouped offers. Identify the exact provider, API
+identifier, and endpoint for each offer. Review its limits, modalities,
+reasoning, effort levels, tools, pricing, and provenance as relevant to the
+requested work. Prefer reasoning.by_api for the endpoint in use.
 
-Les fournisseurs publient leurs modèles, limites, capacités et tarifs à des endroits différents et les font évoluer régulièrement. Auroramind rassemble ces informations dans un fichier commun pour que toute application puissent choisir leurs modèles sans maintenir chacune leur propre liste.
+Treat null or missing information as unknown. Do not infer that reasoning and
+tools work together merely because each is supported separately, and do not
+infer capabilities from a model name. Check conditions such as forced tool
+choice and provider-specific request formats. Confirm important, unclear,
+conflicting, or potentially outdated information against current official
+provider documentation; if it cannot be verified, state the limitation.
 
-Le catalogue décrit les offres. Il n'appelle pas les modèles, ne garantit pas qu'un compte y ait accès et ne remplace pas la documentation du fournisseur.
-
-## Quels modèles sont disponibles ?
-
-Le catalogue utilise les références publiques de Models.dev et LiteLLM. Il comprend notamment des modèles OpenAI, Anthropic, Google, Mistral, xAI, DeepSeek et Cohere. La liste évolue : le fichier publié fait foi pour les références recensées. Leur présence ne prouve pas qu'elles sont actives ou disponibles avec une clé donnée.
-
-Les références explicitement rattachées au même modèle canonique sont regroupées dans une entrée `models`. Ses différentes offres restent dans `offers`, chacune avec son identifiant exact, ses capacités, tarifs et sources. Les références impossibles à rapprocher avec certitude restent des entrées distinctes marquées `grouping: "unresolved"`. Il peut donc rester des doublons : ils ne sont pas supprimés sur une simple ressemblance de nom. Les références `litellm.` ne correspondent pas nécessairement à un identifiant utilisable tel quel auprès d'une API.
-
-## Quelles données sont disponibles ?
-
-Pour chaque offre, lorsqu'elles sont connues : identité et alias, limites de contexte et de sortie, raisonnement et outils, modalités d'entrée, cache, tarifs standard ou conditionnels, cycle de vie et provenance. Les prix sont en USD par million de jetons. Seuls les tarifs attribuables aux fournisseurs directs explicitement reconnus sont renseignés ; les prix des plateformes intermédiaires sont exclus. La reconnaissance des fournisseurs directs et la couverture des données restent incomplètes.
-
-`null` signifie **inconnu** : ce n'est ni un prix gratuit ni une fonctionnalité non prise en charge. Les valeurs et conditions peuvent évoluer ; vérifier leur provenance et la documentation officielle pour un usage sensible.
-
-## Comment lire le fichier ?
-
-```sh
-curl --fail --compressed -o model-catalog.json https://models-catalog.auroramind.fr/model-catalog.json
+Build or update the integration according to the project's actual architecture.
+The catalog describes models; it does not itself call them or guarantee account
+access. Let the consuming application filter models based on verified needs.
+Do not put API keys in the catalog, source code, URLs, or logs. Use the
+application's approved secret storage and the user's own provider credentials.
+Test the behavior appropriate to the change, without making paid generation
+calls unless explicitly authorized.
 ```
 
-Le fichier est autonome : pas de second fichier de données à télécharger. Exemple Python pour afficher les offres Google :
+## Get started
+
+No API key is needed to download the catalog:
+
+```sh
+curl --fail --compressed -o model-catalog.json \
+  https://models-catalog.auroramind.fr/model-catalog.json
+```
+
+The file is self-contained. `models` holds canonical groups or unresolved references; each model has an `offers` dictionary. For example, after downloading the file:
 
 ```python
 import json
@@ -40,32 +85,23 @@ with open('model-catalog.json', encoding='utf-8') as f:
 
 for model in catalog['models'].values():
     for offer in model['offers'].values():
-        identity = offer['identity']
-        if identity['provider'] == 'google':
-            print(model['display_name'], identity['api_id'])
+        if offer['identity']['provider'] == 'google':
+            print(model['display_name'], offer['identity']['api_id'])
 ```
 
-Le catalogue dispose d'un `checksum_sha256` stable pour détecter les changements réels. Avec le collecteur installé, la commande `aurora-model-catalog validate-clean --file model-catalog.json` vérifie sa structure, sa provenance et son checksum. En cas d'échec du téléchargement ou de la validation, conserver la dernière copie valide. `generated_at` et `sync_status` permettent d'évaluer la fraîcheur et l'état des sources ; le serveur peut conserver une réponse en cache pendant cinq minutes.
+Each offer has `identity`, `limits`, `reasoning`, `tools`, `pricing`, `cache`, `input_modalities` and `provenance` sections. API-specific reasoning details, when known, appear under `reasoning.by_api`; general community-sourced effort levels may not identify a specific API. Tool compatibility can have conditions, and the catalog does not encode every restriction.
 
-## Raisonnement et outils
+The file exposes `generated_at`, `sync_status`, `schema_version` and `checksum_sha256`. With the collector installed, run `aurora-model-catalog validate-clean --file model-catalog.json` to validate its structure, provenance and checksum. Retain the last valid copy if download or validation fails. The HTTP cache may serve a response for up to five minutes.
 
-Les informations sont propres à chaque offre, sous `offer["reasoning"]`. Préférer les champs de `reasoning.by_api` correspondant à l'API utilisée : `effort_levels`, `default_effort`, `compatible_with_tools`, `interleaved_tool_thinking` et les conditions connues dans `tool_use_conditions`. La liste générale `reasoning.effort_levels` peut provenir d'une source communautaire sans préciser l'API.
+## API keys
 
-La compatibilité des outils avec le raisonnement ne doit pas être déduite de deux booléens séparés. Un champ absent ou `null` est inconnu. Les restrictions selon le mode, le niveau d'effort ou le choix forcé d'un outil ne sont pas toutes normalisées ; consulter la provenance et la documentation du fournisseur.
+Users need **no key to read the public catalog**. To call a provider's model, each user supplies their own credentials to the **application making the call**, not to Aurora Model Catalog. A local client should use the operating system's secure credential store; a hosted application needs a server-side secret manager with user isolation. This project does not provide a key-entry screen or secret manager for Nexus; that integration must be built in the consuming application.
 
-## Où mettre les clés ?
+The maintainer may separately configure OpenAI and Anthropic keys for a private, account-scoped collection. Those keys are not used to generate the public catalog. The private output can contain account-specific model identifiers and must not be published.
 
-**Aucune clé n'est nécessaire pour télécharger ce catalogue.** Pour utiliser un modèle :
+## Run the collector
 
-1. L'utilisateur crée son propre compte chez le fournisseur et y obtient une clé API.
-2. Il configure cette clé **dans l'application qui appelle le modèle**, par exemple Nexus, selon la procédure de cette application.
-3. L'application cliente utilise cette clé pour appeler le fournisseur. Aurora Model Catalog ne reçoit pas les clés des utilisateurs et ne teste pas leurs accès individuels.
-
-Une application locale devrait utiliser le coffre de secrets du système. Une application hébergée doit conserver les clés côté serveur dans un gestionnaire de secrets isolé par utilisateur. Ne jamais placer une clé dans le catalogue, une URL, un journal ou du code partagé. Ce projet ne fournit pas d'écran de saisie ni de gestionnaire de clés pour Nexus : cette intégration reste à réaliser dans l'application cliente.
-
-## Installer et exploiter le collecteur
-
-Python 3.12+ est nécessaire :
+Python 3.12 or later is required:
 
 ```sh
 python3.12 -m venv .venv
@@ -74,11 +110,6 @@ pip install '.[test]'
 pytest -m 'not integration'
 ```
 
-Sur le serveur actuel, `scripts/daily-sync` actualise les sources, regroupe les références puis publie le fichier unique, sous verrou, chaque jour à **03:00 UTC**. La dernière version valide est conservée en cas d'échec. Le service cron et la machine doivent être actifs à l'heure prévue.
+On the current server, `scripts/daily-sync` collects public sources, groups explicit matches and publishes the self-contained catalog under a lock each day at **03:00 UTC**. The last valid file is kept if publication fails. The machine and cron service must be running; `sync_status` indicates partial source failures.
 
-```sh
-crontab -l
-tail -n 100 logs/daily-sync.log
-```
-
-La collecte privée V1 OpenAI/Anthropic, les fichiers intermédiaires conservés pour compatibilité, le déploiement et les commandes de reconstruction sont détaillés dans le [guide complet](INSTALLATION.md). La collecte publique n'utilise pas les clés privées du propriétaire.
+For reconstruction, Docker, operations, checksum details and the separate private collector, see the [detailed installation guide (French)](INSTALLATION.md). The [public collection report (French)](RAPPORT-PUBLIC.md) describes coverage and limitations.
