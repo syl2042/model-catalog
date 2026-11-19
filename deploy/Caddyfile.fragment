@@ -1,0 +1,15 @@
+models-catalog.auroramind.fr {
+    encode gzip
+    header {
+        X-Content-Type-Options nosniff
+        Access-Control-Allow-Origin *
+        Cache-Control "public, max-age=300"
+    }
+    @catalog path /model-catalog.v2.json /model-catalog.v2.schema.json /model-catalog.groups.v1.json /model-catalog.groups.v1.schema.json /model-catalog.json /model-catalog.schema.json
+    handle @catalog {
+        reverse_proxy aurora-catalog-static:8080
+    }
+    handle {
+        respond "Not found" 404
+    }
+}

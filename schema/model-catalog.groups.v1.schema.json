@@ -1,0 +1,97 @@
+{
+  "$defs": {
+    "Group": {
+      "additionalProperties": false,
+      "properties": {
+        "display_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Display Name"
+        },
+        "canonical_entry": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Canonical Entry"
+        },
+        "members": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Members",
+          "type": "array"
+        }
+      },
+      "required": [
+        "members"
+      ],
+      "title": "Group",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "pattern": "^1\\.0$",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "generated_at": {
+      "title": "Generated At",
+      "type": "string"
+    },
+    "catalog_checksum_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Catalog Checksum Sha256",
+      "type": "string"
+    },
+    "checksum_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Checksum Sha256",
+      "type": "string"
+    },
+    "canonical_source_url": {
+      "title": "Canonical Source Url",
+      "type": "string"
+    },
+    "groups": {
+      "additionalProperties": {
+        "$ref": "#/$defs/Group"
+      },
+      "title": "Groups",
+      "type": "object"
+    },
+    "ungrouped": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Ungrouped",
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "generated_at",
+    "catalog_checksum_sha256",
+    "checksum_sha256",
+    "canonical_source_url",
+    "groups",
+    "ungrouped"
+  ],
+  "title": "GroupIndex",
+  "type": "object"
+}

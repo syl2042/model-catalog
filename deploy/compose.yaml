@@ -1,0 +1,16 @@
+services:
+  catalog-static:
+    image: python:3.12-slim
+    container_name: aurora-catalog-static
+    restart: unless-stopped
+    user: '1000:1000'
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    command: ['python', '-B', '-m', 'http.server', '8080', '--bind', '0.0.0.0', '--directory', '/srv']
+    volumes:
+      - ../public:/srv:ro
+    networks: [proxy]
+networks:
+  proxy:
+    external: true

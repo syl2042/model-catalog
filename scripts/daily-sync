@@ -1,0 +1,24 @@
+#!/bin/sh
+set -eu
+project_dir=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+export AURORA_CONFIG_FILE=/home/ubuntu/.config/aurora-model-catalog/credentials.env
+cd "$project_dir"
+if [ "${1:-}" != '--locked' ]; then
+    exec flock -n "$project_dir/output/.sync.lock" "$0" --locked
+fi
+status=0
+printf '\n[%s] Synchronisation quotidienne du catalogue public\n' "$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+if "$project_dir/.venv/bin/aurora-model-catalog" sync-public --file "$project_dir/public/model-catalog.v2.json"; then
+    printf '\n[%s] Mise à jour de la vue regroupée\n' "$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+    if "$project_dir/.venv/bin/aurora-model-catalog" sync-groups --catalog "$project_dir/public/model-catalog.v2.json" --file "$project_dir/public/model-catalog.groups.v1.json"; then
+        printf '\n[%s] Publication du catalogue unifié\n' "$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+        "$project_dir/.venv/bin/aurora-model-catalog" sync-clean --catalog "$project_dir/public/model-catalog.v2.json" --groups "$project_dir/public/model-catalog.groups.v1.json" --file "$project_dir/public/model-catalog.json" || status=1
+    else
+        status=1
+    fi
+else
+    status=1
+fi
+printf '\n[%s] Synchronisation quotidienne du catalogue privé\n' "$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+"$project_dir/.venv/bin/aurora-model-catalog" sync --file "$project_dir/output/model-catalog.v1.json" || status=1
+exit "$status"
