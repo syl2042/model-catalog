@@ -117,3 +117,15 @@ docker build -t aurora-model-catalog .
 Les commandes de la chaîne publique peuvent être exécutées dans le conteneur avec un volume partagé monté sur `/app/public`. Elles ne publient pas le résultat sur Internet. Sur le serveur, `docker compose -f deploy/compose.yaml up -d` gère le conteneur statique ; la configuration HTTPS est celle de Caddy.
 
 Les données proviennent de [Models.dev](https://models.dev/) et du [fichier public LiteLLM](https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json), complétés par certains tableaux officiels reconnus d'OpenAI, Anthropic et DeepSeek. La liste des sources et les dates sont dans le JSON. Les dépôts de données utilisés sont sous licence MIT ; les autres dépendances et les données de chaque fournisseur conservent leurs conditions propres.
+
+## Actualiser le tableau de modèles du dépôt
+
+Le fichier [MODELS.md](MODELS.md) est un instantané des modèles canoniques, pas une liste automatiquement mise à jour sur GitHub. Pour le régénérer depuis le catalogue public puis examiner et publier la modification :
+
+```sh
+. .venv/bin/activate
+python scripts/generate_models_table.py
+git diff -- MODELS.md
+```
+
+Le script valide le catalogue avant d'écrire le tableau. Il compte séparément les versions canoniques et exclut les références non résolues ; les espaces de noms créateurs peuvent désigner des organisations et ne garantissent pas l'existence d'une API directe.

@@ -2,7 +2,7 @@
 
 **Une référence actualisée sur les modèles, pour les développeurs et les agents de codage qui construisent des agents IA.**
 
-[English](README.md) · [Télécharger le catalogue](https://models-catalog.auroramind.fr/model-catalog.json) · [Guide d'installation détaillé](INSTALLATION.md)
+[English](README.md) · [Télécharger le catalogue](https://models-catalog.auroramind.fr/model-catalog.json) · [Inventaire des modèles](MODELS.md) · [Guide d'installation détaillé](INSTALLATION.md)
 
 ## Le problème
 
@@ -16,7 +16,7 @@ Aurora Model Catalog rassemble les informations disponibles dans **un fichier JS
 
 ## Que contient le catalogue ?
 
-Le catalogue utilise les données publiques de Models.dev et LiteLLM, complétées par certaines documentations officielles. Il comprend des références de fournisseurs tels qu'OpenAI, Anthropic, Google, Mistral, xAI, DeepSeek et Cohere. Les références évoluent ; leur présence ne garantit **pas** qu'un modèle est actif ou accessible à un compte donné.
+Le catalogue utilise les données publiques de Models.dev et LiteLLM, complétées par certaines documentations officielles. Il comprend des références de fournisseurs tels qu'OpenAI, Anthropic, Google, Mistral, xAI, DeepSeek et Cohere. L'[inventaire des modèles](MODELS.md) liste les modèles canoniques et leurs espaces de noms créateurs à une date donnée ; le JSON est la source actualisée. Les références évoluent ; leur présence ne garantit **pas** qu'un modèle est actif ou accessible à un compte donné.
 
 Pour chaque offre, lorsque les informations sont connues, le fichier décrit :
 
