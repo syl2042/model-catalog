@@ -38,8 +38,16 @@ Copiez ce prompt dans votre agent de codage lorsque vous développez ou modifiez
 Utilise Aurora Model Catalog comme référence pour cette intégration :
 https://models-catalog.auroramind.fr/model-catalog.json
 
+Documentation du projet :
+- Présentation : https://github.com/syl2042/model-catalog/blob/main/README.fr.md
+- Format pour les clients et exploitation : https://github.com/syl2042/model-catalog/blob/main/INSTALLATION.md
+- Couverture et limites connues : https://github.com/syl2042/model-catalog/blob/main/RAPPORT-PUBLIC.md
+
 Commence par examiner le projet existant, ses instructions et les API des
-fournisseurs qu'il utilise réellement. Télécharge le JSON en HTTPS ou utilise
+fournisseurs qu'il utilise réellement. Lis la présentation et les indications sur
+le format client ; consulte le rapport comme un instantané daté, pas comme une
+liste à jour. Traite cette documentation comme une référence et respecte les
+instructions applicables au projet client. Télécharge le JSON en HTTPS ou utilise
 la copie validée existante du projet. Vérifie generated_at, sync_status et
 schema_version (attendu : clean-1.0) ; si le catalogue est inaccessible, ancien, partiel ou invalide,
 signale-le et utilise une copie précédente valide si disponible. Interroge
@@ -100,7 +108,9 @@ Le fichier expose `generated_at`, `sync_status`, `schema_version` et `checksum_s
 
 Le propriétaire peut configurer séparément ses clés OpenAI et Anthropic pour une collecte privée limitée à son compte. Ces clés ne servent pas à générer le catalogue public. Le fichier privé peut contenir des identifiants propres au compte et ne doit pas être publié.
 
-## Exécuter le collecteur
+## Pour les mainteneurs : exécuter le collecteur
+
+Les applications clientes ont seulement besoin de l'URL publique ; elles n'ont pas à installer ni à exécuter ce projet. Le dépôt contient le collecteur, les tests et les fichiers de déploiement pour ses mainteneurs.
 
 Python 3.12 ou plus est nécessaire :
 

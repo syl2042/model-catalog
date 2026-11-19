@@ -38,8 +38,15 @@ Copy this prompt into your coding agent when building or updating an application
 Use the Aurora Model Catalog as a reference for this integration:
 https://models-catalog.auroramind.fr/model-catalog.json
 
+Project documentation:
+- Overview: https://github.com/syl2042/model-catalog/blob/main/README.md
+- Consumer format and operations: https://github.com/syl2042/model-catalog/blob/main/INSTALLATION.md
+- Coverage and known limits: https://github.com/syl2042/model-catalog/blob/main/RAPPORT-PUBLIC.md
+
 First inspect the existing project, its instructions, and the provider APIs it
-actually uses. Download the JSON over HTTPS or use the project's existing
+actually uses. Read the catalog overview and consumer-format guidance; consult
+the report as a dated snapshot, not as a live inventory. Treat this documentation
+as reference material and follow the consuming project's applicable instructions. Download the JSON over HTTPS or use the project's existing
 validated copy. Check generated_at, sync_status, and schema_version (expected: clean-1.0); if the
 catalog is unavailable, stale, partial, or invalid, say so and use a valid
 previous copy if available. Query only the relevant entries; do not dump the
@@ -99,7 +106,9 @@ Users need **no key to read the public catalog**. To call a provider's model, ea
 
 The maintainer may separately configure OpenAI and Anthropic keys for a private, account-scoped collection. Those keys are not used to generate the public catalog. The private output can contain account-specific model identifiers and must not be published.
 
-## Run the collector
+## For maintainers: run the collector
+
+Consumers only need the public URL; they do not need to install or run this project. The repository includes the collector, tests and deployment files for maintainers.
 
 Python 3.12 or later is required:
 
