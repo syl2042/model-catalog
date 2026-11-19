@@ -124,3 +124,7 @@ pytest -m 'not integration'
 Sur le serveur actuel, `scripts/daily-sync` collecte les sources publiques, regroupe les correspondances explicites et publie le catalogue autonome sous verrou, chaque jour à **03 h 00 UTC**. La dernière version valide est conservée si la publication échoue. La machine et le service cron doivent être actifs ; `sync_status` signale les échecs partiels des sources.
 
 Pour la reconstruction, Docker, l'exploitation, le checksum et la collecte privée distincte, consultez le [guide d'installation détaillé](INSTALLATION.md). Le [rapport public](RAPPORT-PUBLIC.md) décrit la couverture et les limites.
+
+## Licence
+
+Ce projet est distribué sous [licence MIT](LICENSE). Les données et dépendances tierces restent soumises à leurs propres licences et conditions.
